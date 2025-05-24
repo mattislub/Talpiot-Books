@@ -1,0 +1,14 @@
+{
+  "name": "jewish-bookstore",
+  "version": "1.0.0",
+  "description": "Jewish Bookstore Project",
+  "scripts": {
+    "start": "concurrently \"npm run start:api\" \"npm run start:frontend\"",
+    "start:api": "cd jewish-bookstore-api && npm run dev",
+    "start:frontend": "cd jewish-bookstore-frontend && npm start",
+    "install:all": "npm install && cd jewish-bookstore-api && npm install && cd ../jewish-bookstore-frontend && npm install"
+  },
+  "dependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
