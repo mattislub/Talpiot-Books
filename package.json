@@ -6,8 +6,7 @@
   "scripts": {
     "start": "concurrently \"npm run start:api\" \"npm run start:frontend\"",
     "start:api": "cd jewish-bookstore-api && nodemon index.js",
-    "start:frontend": "cd jewish-bookstore-frontend && npm run start",
-    "install:all": "npm install && cd jewish-bookstore-api && npm install && cd ../jewish-bookstore-frontend && npm install"
+    "start:frontend": "cd jewish-bookstore-frontend && npm run start"
   },
   "dependencies": {
     "concurrently": "^8.2.2",
