@@ -1,30 +1,17 @@
 import React, { useEffect, useRef, useState } from 'react';
-import axios from "axios";
 import { Link } from "react-router-dom";
+import { getNewBooks } from "../data/books";
 
 export const NewOnSite = () => {
   const scrollRef = useRef(null);
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchBooks = async () => {
-      try {
-        setLoading(true);
-        const response = await axios.get("http://sr.70-60.com:3010/api/books", {
-          params: { new: true, limit: 8 }
-        });
-        setBooks(response.data);
-        setError(null);
-      } catch (error) {
-        setError("שגיאה בטעינת ספרים חדשים");
-        console.error("שגיאה:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchBooks();
+    setLoading(true);
+    const newBooks = getNewBooks(8);
+    setBooks(newBooks);
+    setLoading(false);
   }, []);
 
   useEffect(() => {
@@ -40,7 +27,6 @@ export const NewOnSite = () => {
   }, []);
 
   if (loading) return <div className="text-center py-8">טוען...</div>;
-  if (error) return <div className="text-center py-8 text-red-600">{error}</div>;
 
   return (
     <div className="w-full overflow-hidden py-4 bg-[#fdf6ec]">
@@ -49,7 +35,7 @@ export const NewOnSite = () => {
         {books.map(book => (
           <Link key={book.id} to={`/books/${book.id}`} className="flex-shrink-0 w-48 cursor-pointer">
             <img
-              src={book.image_url ? `http://sr.70-60.com:3010${book.image_url}` : `https://via.placeholder.com/300x400.png?text=${encodeURIComponent(book.title)}`}
+              src={book.image_url || `https://via.placeholder.com/300x400.png?text=${encodeURIComponent(book.title)}`}
               alt={book.title}
               className="w-full h-64 object-cover rounded-xl shadow"
             />
