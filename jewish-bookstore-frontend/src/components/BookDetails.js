@@ -1,33 +1,12 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React from "react";
 import { useParams, Link } from "react-router-dom";
 import { ShoppingCart } from "lucide-react";
 
 export default function BookDetails() {
   const { id } = useParams();
-  const [book, setBook] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const books = JSON.parse(localStorage.getItem('books') || '[]');
+  const book = books.find(b => b.id === parseInt(id));
 
-  useEffect(() => {
-    const fetchBook = async () => {
-      try {
-        setLoading(true);
-        const response = await axios.get(`http://sr.70-60.com:3010/api/books/${id}`);
-        setBook(response.data);
-        setError(null);
-      } catch (error) {
-        setError("שגיאה בטעינת פרטי הספר");
-        console.error("שגיאה:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchBook();
-  }, [id]);
-
-  if (loading) return <div className="text-center py-8">טוען...</div>;
-  if (error) return <div className="text-center py-8 text-red-600">{error}</div>;
   if (!book) return <div className="text-center py-8">הספר לא נמצא</div>;
 
   return (
@@ -35,7 +14,7 @@ export default function BookDetails() {
       <Link to="/" className="text-blue-600 hover:underline mb-4 inline-block">← חזרה לקטלוג</Link>
       <div className="bg-white shadow-lg rounded-xl p-6 flex flex-col md:flex-row gap-6">
         <img
-          src={book.image_url ? `http://sr.70-60.com:3010${book.image_url}` : `https://via.placeholder.com/300x400.png?text=${encodeURIComponent(book.title)}`}
+          src={book.image_url}
           alt={book.title}
           className="w-full md:w-1/3 h-[300px] object-contain rounded"
         />

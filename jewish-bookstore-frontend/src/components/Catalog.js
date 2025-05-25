@@ -1,60 +1,77 @@
 import React, { useEffect, useState } from "react";
 import { ShoppingCart, Plus, Eye } from "lucide-react";
-import axios from "axios";
 import { Link, useLocation } from "react-router-dom";
+
+const mockBooks = [
+  {
+    id: 1,
+    title: "שולחן ערוך",
+    author: "רבי יוסף קארו",
+    description: "ספר יסוד בהלכה",
+    price: 120,
+    image_url: "https://images.pexels.com/photos/159866/books-book-pages-read-literature-159866.jpeg",
+    status: "available"
+  },
+  {
+    id: 2,
+    title: "משנה ברורה",
+    author: "החפץ חיים",
+    description: "ביאור להלכות שו\"ע",
+    price: 110,
+    image_url: "https://images.pexels.com/photos/159711/books-bookstore-book-reading-159711.jpeg",
+    status: "available"
+  },
+  {
+    id: 3,
+    title: "תנ\"ך קורן",
+    author: "",
+    description: "התנ\"ך בניקוד מלא",
+    price: 80,
+    image_url: "https://images.pexels.com/photos/159866/books-book-pages-read-literature-159866.jpeg",
+    status: "available"
+  }
+];
 
 export default function Catalog() {
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const location = useLocation();
   const searchQuery = new URLSearchParams(location.search).get("search") || "";
 
   useEffect(() => {
-    const fetchBooks = async () => {
-      try {
-        setLoading(true);
-        const response = await axios.get(`http://sr.70-60.com:3010/api/books`, {
-          params: { search: searchQuery }
-        });
-        setBooks(response.data);
-        setError(null);
-      } catch (error) {
-        setError("שגיאה בטעינת ספרים");
-        console.error("שגיאה:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchBooks();
-  }, [searchQuery]);
+    // Load books from localStorage or use mock data
+    const storedBooks = localStorage.getItem('books');
+    if (storedBooks) {
+      setBooks(JSON.parse(storedBooks));
+    } else {
+      localStorage.setItem('books', JSON.stringify(mockBooks));
+      setBooks(mockBooks);
+    }
+    setLoading(false);
+  }, []);
+
+  const filteredBooks = books.filter(book => 
+    book.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    book.author.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   if (loading) return <div className="text-center py-8">טוען...</div>;
-  if (error) return <div className="text-center py-8 text-red-600">{error}</div>;
 
   return (
     <div className="p-4 max-w-6xl mx-auto">
       <h2 className="text-3xl font-bold mb-6 text-center text-[#112a55]">קטלוג הספרים</h2>
 
       <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-        {books.map((book) => (
+        {filteredBooks.map((book) => (
           <div
             key={book.id}
             className="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col transform transition-transform duration-300 hover:scale-105"
           >
-            {book.image_url ? (
-              <img
-                src={`http://sr.70-60.com:3010${book.image_url}`}
-                alt={book.title}
-                className="w-full h-[300px] object-contain bg-white rounded-t-2xl"
-              />
-            ) : (
-              <img
-                src={`https://via.placeholder.com/300x400.png?text=${encodeURIComponent(book.title)}`}
-                alt={book.title}
-                className="w-full h-64 object-cover rounded-t-2xl"
-              />
-            )}
+            <img
+              src={book.image_url}
+              alt={book.title}
+              className="w-full h-[300px] object-cover bg-white rounded-t-2xl"
+            />
 
             <div className="p-4 flex-1 flex flex-col justify-between">
               <div>
