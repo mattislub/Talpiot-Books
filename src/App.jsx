@@ -11,7 +11,7 @@ import NotFound from "./components/NotFound";
 function App() {
   return (
     <Router>
-      <div dir="rtl" className="font-sans">
+      <div dir="rtl" className="font-serif bg-[#f8f6f1] min-h-screen">
         <Header />
         <Routes>
           <Route
@@ -29,6 +29,10 @@ function App() {
           <Route path="/books/:id" element={<BookDetails />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
+        <footer className="bg-[#112a55] text-white text-center py-4 mt-8">
+          <p>© כל הזכויות שמורות לחנות הספרים שלנו</p>
+          <p className="text-sm mt-2">לשירותכם בכל עת - טלפון: 03-1234567</p>
+        </footer>
       </div>
     </Router>
   );
