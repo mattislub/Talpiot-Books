@@ -108,7 +108,7 @@ const filterGroups: FilterGroup[] = [
     title: 'Foreign Transaction Fee',
     icon: <Globe className="h-5 w-5 text-indigo-600" />,
     options: [
-      { id: 'no-foreign-fee', label: 'No Foreign Transaction Fee' }
+      { id: 'no-foreign-transaction-fee', label: 'No Foreign Transaction Fee' }
     ]
   },
   {
